@@ -40,3 +40,79 @@ const lowPassFilter = (data: Float32Array, sampleRate: number): Float32Array => 
 
 	return result;
 };
+
+export const detectBeats = (audioBuffer: AudioBuffer, bpm: number, offset: number): number[] => {
+	try {
+		const sampleRate = audioBuffer.sampleRate;
+		const data = audioBuffer.getChannelData(0);
+		const normalizedData = normalizeData(data);
+		const filteredData = lowPassFilter(normalizedData, sampleRate);
+
+		const secondsPerBeat = 60 / bpm;
+		const samplesPerBeat = secondsPerBeat * sampleRate;
+
+		const energyWindow = Math.floor(samplesPerBeat / 4);
+		const energyData = new Float32Array(Math.floor(data.length / energyWindow));
+
+		for (let i = 0; i < energyData.length; i++) {
+			let energy = 0;
+			const startIdx = i * energyWindow;
+			const endIdx = Math.min(startIdx + energyWindow, data.length);
+
+			for (let j = startIdx; j < endIdx; j++) {
+				energy += Math.abs(filteredData[j]);
+			}
+
+			energyData[i] = energy / energyWindow;
+		}
+
+		const beats: number[] = [];
+		const minPeakDistance = Math.floor(samplesPerBeat / energyWindow) * 0.9;
+
+		let averageEnergy = 0;
+		for (let i = 0; i < Math.min(energyData.length, 100); i++) {
+			averageEnergy += energyData[i];
+		}
+		averageEnergy /= Math.min(energyData.length, 100);
+
+		const dynamicThreshold = averageEnergy * 1.5;
+
+		let lastPeakIndex = -minPeakDistance * 2;
+		for (let i = 1; i < energyData.length - 1; i++) {
+			if (energyData[i] > dynamicThreshold && energyData[i] > energyData[i - 1] && energyData[i] >= energyData[i + 1] && i - lastPeakIndex > minPeakDistance) {
+				const beatTime = (i * energyWindow) / sampleRate;
+				beats.push(beatTime);
+				lastPeakIndex = i;
+			}
+		}
+
+		if (beats.length < 4) {
+			console.log('Beat detection ineffective, falling back to calculated beats');
+			beats.length = 0;
+			const numBeats = Math.floor(data.length / samplesPerBeat);
+			for (let i = 0; i < numBeats; i++) {
+				beats.push(offset + i * secondsPerBeat);
+			}
+		}
+
+		if (beats.length > 0 && beats[0] < offset) {
+			const beatAdjustment = offset - beats[0];
+			for (let i = 0; i < beats.length; i++) {
+				beats[i] += beatAdjustment;
+			}
+		}
+
+		return beats;
+	} catch (error) {
+		console.error('Error detecting beats:', error);
+		const secondsPerBeat = 60 / bpm;
+		const audioDuration = audioBuffer.duration;
+		const numBeats = Math.floor(audioDuration / secondsPerBeat);
+
+		const beats: number[] = [];
+		for (let i = 0; i < numBeats; i++) {
+			beats.push(offset + i * secondsPerBeat);
+		}
+		return beats;
+	}
+};

@@ -9,3 +9,18 @@ export const detectBPM = async (buffer: AudioBuffer) => {
 		return { bpm: 0, offset: 0 };
 	}
 };
+
+const normalizeData = (data: Float32Array): Float32Array => {
+	let max = 0;
+	for (let i = 0; i < data.length; i++) {
+		const amplitude = Math.abs(data[i]);
+		if (amplitude > max) max = amplitude;
+	}
+
+	const result = new Float32Array(data.length);
+	for (let i = 0; i < data.length; i++) {
+		result[i] = max === 0 ? 0 : data[i] / max;
+	}
+
+	return result;
+};

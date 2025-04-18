@@ -24,3 +24,19 @@ const normalizeData = (data: Float32Array): Float32Array => {
 
 	return result;
 };
+
+const lowPassFilter = (data: Float32Array, sampleRate: number): Float32Array => {
+	const result = new Float32Array(data.length);
+	const alpha = 0.03;
+	const resonance = 1.5;
+	let prevValue = 0;
+
+	result[0] = data[0];
+	for (let i = 1; i < data.length; i++) {
+		const filtered = alpha * data[i] + (1 - alpha) * result[i - 1];
+		result[i] = filtered + resonance * (filtered - prevValue);
+		prevValue = filtered;
+	}
+
+	return result;
+};

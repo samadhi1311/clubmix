@@ -1,4 +1,5 @@
 import { guess } from 'web-audio-beat-detector';
+import * as Tone from 'tone';
 
 export const detectBPM = async (buffer: AudioBuffer) => {
 	try {
@@ -114,5 +115,36 @@ export const detectBeats = (audioBuffer: AudioBuffer, bpm: number, offset: numbe
 			beats.push(offset + i * secondsPerBeat);
 		}
 		return beats;
+	}
+};
+
+export const applyCrossfade = (player1: Tone.Player | null, player2: Tone.Player | null, value: number): void => {
+	if (!player1 || !player2) return;
+
+	try {
+		const logValue = Math.pow(value, 2);
+
+		const volume1 = value <= 0.5 ? 1 : Math.cos((logValue - 0.5) * Math.PI);
+		const volume2 = value >= 0.5 ? 1 : Math.cos((0.5 - logValue) * Math.PI);
+
+		if (player1.volume) {
+			try {
+				const db1 = volume1 <= 0.001 ? -Infinity : Tone.gainToDb(Math.max(0.001, volume1));
+				player1.volume.value = db1;
+			} catch (e) {
+				console.error('Error setting volume on player 1:', e);
+			}
+		}
+
+		if (player2.volume) {
+			try {
+				const db2 = volume2 <= 0.001 ? -Infinity : Tone.gainToDb(Math.max(0.001, volume2));
+				player2.volume.value = db2;
+			} catch (e) {
+				console.error('Error setting volume on player 2:', e);
+			}
+		}
+	} catch (error) {
+		console.error('Error applying crossfade:', error);
 	}
 };

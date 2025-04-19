@@ -16,7 +16,7 @@ const MixerInterface: React.FC = () => {
 	const [masterVolume, setMasterVolume] = useState<number>(0.8);
 	const [crossfadePosition, setCrossfadePosition] = useState<number>(0); // 0 = deck1, 1 = deck2
 
-	const { audioContext, analyzerData, loadTrack, playTrack, pauseTrack, startTransition, isMixing, progress, debugInfo } = useAudioProcessing({
+	const { analyzerData, loadTrack, playTrack, pauseTrack, startTransition, isMixing, progress, debugInfo } = useAudioProcessing({
 		transitionBeats,
 		masterVolume,
 		onTransitionComplete: () => {
@@ -85,7 +85,7 @@ const MixerInterface: React.FC = () => {
 
 	return (
 		<div className='flex flex-col gap-6'>
-			<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+			<div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
 				<TrackDeck
 					deckId='deck1'
 					track={tracks.deck1}

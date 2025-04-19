@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
 	return (
-		<div className='min-h-screen w-full bg-gradient-to-br from-neutral-950 to-neutral-900 p-4 text-neutral-100 md:p-6'>
+		<div className='flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-br from-neutral-950 to-neutral-900 p-4 text-neutral-100 md:p-6'>
 			<header className='container mx-auto mb-6'>
 				<div className='flex items-center gap-2'>
 					<MusicIcon className='text-violet-500' size={32} />

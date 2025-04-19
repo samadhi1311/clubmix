@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { WaveformDisplay } from './waveform-display';
 import { Music, Play, Pause, Upload } from 'lucide-react';
 
@@ -40,7 +40,7 @@ const TrackDeck: React.FC<TrackDeckProps> = ({ deckId, track, onLoadTrack, onPla
 	return (
 		<div className={`deck ${isActive ? 'deck-active' : ''}`}>
 			<div className='flex justify-between items-center mb-3'>
-				<h3 className='text-lg font-semibold text-purple-300 flex items-center gap-1'>
+				<h3 className='text-lg font-semibold text-violet-300 flex items-center gap-1'>
 					<Music size={18} />
 					Deck {deckId.replace('deck', '')}
 				</h3>
@@ -63,12 +63,12 @@ const TrackDeck: React.FC<TrackDeckProps> = ({ deckId, track, onLoadTrack, onPla
 						{track.name}
 					</div>
 
-					<div className='grid grid-cols-2 text-xs text-gray-400 mb-2'>
+					<div className='grid grid-cols-2 text-xs text-neutral-400 mb-2'>
 						<div>
 							BPM: <span className='text-blue-400'>{formatBPM(track.bpm)}</span>
 						</div>
 						<div className='text-right'>
-							Duration: <span className='text-purple-400'>{formatDuration(track.duration)}</span>
+							Duration: <span className='text-violet-400'>{formatDuration(track.duration)}</span>
 						</div>
 					</div>
 
@@ -76,7 +76,7 @@ const TrackDeck: React.FC<TrackDeckProps> = ({ deckId, track, onLoadTrack, onPla
 				</div>
 			) : (
 				<div className='waveform-container flex items-center justify-center'>
-					<div className='text-gray-500 text-center'>
+					<div className='text-neutral-500 text-center'>
 						<p>No track loaded</p>
 						<p className='text-xs mt-1'>Click the upload button to load an audio file</p>
 					</div>

@@ -207,7 +207,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 			}));
 
 			// Update debug info
-			setDebugInfo((prev) => ({
+			setDebugInfo((prev: { [key: string]: any }) => ({
 				...prev,
 				[deckId]: {
 					...prev[deckId],
@@ -283,7 +283,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 			},
 		}));
 
-		setDebugInfo((prev) => ({
+		setDebugInfo((prev: { [key: string]: any }) => ({
 			...prev,
 			[deckId]: {
 				...prev[deckId],
@@ -328,7 +328,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 				},
 			}));
 
-			setDebugInfo((prev) => ({
+			setDebugInfo((prev: { [key: string]: any }) => ({
 				...prev,
 				[deckId]: {
 					...prev[deckId],
@@ -377,7 +377,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 		setIsMixing(true);
 
 		// Update debug info
-		setDebugInfo((prev) => ({
+		setDebugInfo((prev: { [key: string]: any }) => ({
 			...prev,
 			transition: {
 				fromDeck,
@@ -442,7 +442,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 
 		gainNode.gain.linearRampToValueAtTime(gain, now + 0.01);
 
-		setDebugInfo((prev) => ({
+		setDebugInfo((prev: { [key: string]: any }) => ({
 			...prev,
 			[deckId]: {
 				...prev[deckId],
@@ -477,7 +477,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 		source.playbackRate.linearRampToValueAtTime(newRate, now + 0.05);
 		audioDataRef.current[deckId].playbackRate = newRate;
 
-		setDebugInfo((prev) => ({
+		setDebugInfo((prev: { [key: string]: any }) => ({
 			...prev,
 			[deckId]: {
 				...prev[deckId],
@@ -517,7 +517,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 			const beatsPerSecond = bpm / 60;
 			const currentBeat = Math.floor(elapsedSeconds * beatsPerSecond);
 
-			setDebugInfo((prev) => ({
+			setDebugInfo((prev: { [key: string]: any }) => ({
 				...prev,
 				[deckId]: {
 					...prev[deckId],
@@ -548,7 +548,7 @@ export const useAudioProcessing = ({ transitionBeats, masterVolume, onTransition
 		updatePlaybackRate(fromDeck);
 		updatePlaybackRate(toDeck);
 
-		setDebugInfo((prev) => ({
+		setDebugInfo((prev: { [key: string]: any }) => ({
 			...prev,
 			transition: {
 				...prev.transition,
